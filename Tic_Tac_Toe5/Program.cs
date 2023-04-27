@@ -9,6 +9,7 @@ namespace Tic_Tac_Toe5
     {
         static void Main(string[] args)
         {
+            // Création d'une nouvelle instance de la classe Game et démarrage du jeu
             Game game = new Game();
             game.Start();
         }
@@ -16,17 +17,20 @@ namespace Tic_Tac_Toe5
 
     public class Game
     {
-        private Board board;
-        private Player player;
-        private Computer computer;
-        private bool isGameOver;
+        private Board board; // Plaeau de jeu
+        private Player player; // Joueur humain
+        private Computer computer; // Joueur IA
+        private bool isGameOver;   // Etat du jeu (terminé ou non)
 
         public void Start()
         {
+            // Initialisation des instances et du plateau
             board = new Board();
             player = new Player("X");
             computer = new Computer("O");
 
+
+            // Boucle principale du jeu
             while (!isGameOver)
             {
                 Console.Clear();
@@ -42,6 +46,7 @@ namespace Tic_Tac_Toe5
                 isGameOver = board.CheckGameOver();
             }
 
+            // Affichage du plateau final et fin du jeu
             Console.Clear();
             board.Print();
             End();
@@ -49,6 +54,7 @@ namespace Tic_Tac_Toe5
 
         public void End()
         {
+            // Message indiquant la fin du jeu et attente d'une touche pour quitter
             Console.WriteLine("Fin du jeu.");
             Console.ReadKey();
         }
@@ -56,10 +62,11 @@ namespace Tic_Tac_Toe5
 
     public class Board
     {
-        private string[] grid;
+        private string[] grid;  // Grille du plateau
 
         public Board()
         {
+            // Initialisation de la grille
             grid = new string[10];
             for (int i = 1; i < 10; i++)
             {
@@ -69,6 +76,7 @@ namespace Tic_Tac_Toe5
 
         public bool PlaceSymbol(int position, string symbol)
         {
+            // Placement d'un symbole sur le plateau
             if (grid[position] == " ")
             {
                 grid[position] = symbol;
@@ -79,7 +87,9 @@ namespace Tic_Tac_Toe5
 
         public string GetWinner()
         {
-            // Check for win
+            // Vérifie si un joueur a gagné ou si la partie est nulle
+
+            // Vérifie les lignes
             for (int i = 1; i <= 9; i += 3)
             {
                 if (grid[i] == grid[i + 1] && grid[i] == grid[i + 2] && grid[i] != " ")
@@ -88,6 +98,7 @@ namespace Tic_Tac_Toe5
                 }
             }
 
+            // Vérifie les colonnes
             for (int i = 1; i <= 3; i++)
             {
                 if (grid[i] == grid[i + 3] && grid[i] == grid[i + 6] && grid[i] != " ")
@@ -96,12 +107,13 @@ namespace Tic_Tac_Toe5
                 }
             }
 
+            // Vérifie les diagonales
             if ((grid[1] == grid[5] && grid[1] == grid[9] && grid[1] != " ") || (grid[3] == grid[5] && grid[3] == grid[7] && grid[3] != " "))
             {
                 return grid[5];
             }
 
-            // Check for draw
+            // Vérifie si la partie est nulle
             bool isDraw = true;
             for (int i = 1; i < 10; i++)
             {
@@ -119,12 +131,14 @@ namespace Tic_Tac_Toe5
 
         public bool CheckGameOver()
         {
+            // Vérifie si la partie est terminée (victoire ou match nul)
             string winner = GetWinner();
             return winner != null;
         }
 
         public void Print()
         {
+            // Affichage du plateau de jeu
             Console.WriteLine("     |     |      ");
             Console.WriteLine("  {0}  |  {1}  |  {2}", grid[1], grid[2], grid[3]);
             Console.WriteLine("_____|_____|_____ ");
@@ -138,6 +152,7 @@ namespace Tic_Tac_Toe5
 
         public Board Clone()
         {
+            // Crée une copie du plateau actuel
             Board newBoard = new Board();
             Array.Copy(grid, newBoard.grid, grid.Length);
             return newBoard;
@@ -146,7 +161,7 @@ namespace Tic_Tac_Toe5
 
     public class Player
     {
-        private string symbol;
+        private string symbol;  // Symbole du joueur
 
         public Player(string symbol)
         {
@@ -155,6 +170,7 @@ namespace Tic_Tac_Toe5
 
         public void Play(Board board)
         {
+            // Gère le tour du joueur humain
             bool validMove = false;
             while (!validMove)
             {
@@ -183,8 +199,9 @@ namespace Tic_Tac_Toe5
 
     public class Computer
     {
-        private string symbol;
-        private string opponentSymbol;
+        private string symbol;  // Symbole de l'ordinateur
+        private string opponentSymbol;  // Symbole de l'adversaire
+
 
         public Computer(string symbol)
         {
@@ -194,6 +211,7 @@ namespace Tic_Tac_Toe5
 
         public void Play(Board board)
         {
+            // Gère le tour de l'IA
             int bestScore = int.MinValue;
             int bestMove = -1;
 
@@ -216,6 +234,7 @@ namespace Tic_Tac_Toe5
 
         private int BestMove(Board board, bool isMaximizing)
         {
+            // Calcule le meilleur coup pour l'IA à l'aide de l'algorithme minimax
             string winner = board.GetWinner();
             if (winner != null)
             {
